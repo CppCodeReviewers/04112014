@@ -13,35 +13,41 @@ auto student_points = std::map<std::string, std::vector<int>> {
 };
 
 // BEFORE
-void before()
+namespace before
 {
-    for (const auto& e : student_points)
+    void sum()
     {
-        std::cout << "Sum of points for student: '" << e.first << "' is "
-            << std::accumulate(e.second.begin(), e.second.end(), 0) << std::endl;
+        for (const auto& e : student_points)
+        {
+            std::cout << "Sum of points for student: '" << e.first << "' is "
+                << std::accumulate(e.second.begin(), e.second.end(), 0) << std::endl;
+        }
     }
 }
 
 // AFTER
-template <typename Range, typename Fun>
-void map_for_each(const Range& range, Fun f)
+namespace after
 {
-    for(const auto& e : range)
-        f(e.first, e.second);
-}
+    template <typename Range, typename Fun>
+    void map_for_each(const Range& range, Fun f)
+    {
+        for(const auto& e : range)
+            f(e.first, e.second);
+    }
 
-void after()
-{
-    map_for_each(student_points, [](auto& student, auto& points){
-        std::cout << "Sum of points for student: '" << student << "' is "
-            << std::accumulate(points.begin(), points.end(), 0) << std::endl;
-    });
+    void sum()
+    {
+        map_for_each(student_points, [](auto& student, auto& points){
+            std::cout << "Sum of points for student: '" << student << "' is "
+                << std::accumulate(points.begin(), points.end(), 0) << std::endl;
+        });
+    }
 }
 
 int main()
 {
     std::cout << "---- BEFORE" << std::endl;
-    before();
+    before::sum();
     std::cout << "---- AFTER" << std::endl;
-    after();
+    after::sum();
 }
